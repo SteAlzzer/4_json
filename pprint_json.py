@@ -21,7 +21,13 @@ def print_with_tab(string, tab_size, tab_char='    ', end=True):
     else:
         print(string, end='')
 
+global_types = []
 def pretty_print_json(data, tab_size=1, suspend_first_tab=False, how_about_coma=False):
+    global global_types
+    if type(data) not in global_types:
+        global_types.append(type(data))
+
+
     if type(data) == list:
         if suspend_first_tab:
             print('[')
@@ -30,6 +36,9 @@ def pretty_print_json(data, tab_size=1, suspend_first_tab=False, how_about_coma=
             tab_size += 1
         for item_num, item in enumerate(data):
             # print('helllooo\t{}'.format(type(item)))
+            if type(item) not in global_types:
+                global_types.append(type(item))
+
             if type(item) == int or type(item) == float:
                 if item_num != len(data)-1:
                     print_with_tab('{},'.format(item), tab_size)
@@ -58,6 +67,12 @@ def pretty_print_json(data, tab_size=1, suspend_first_tab=False, how_about_coma=
         for item_num, item_key in enumerate(data):
             item_value = data[item_key]
             item_type = type(item_value)
+
+            if type(item_key) not in global_types:
+                global_types.append(type(item_key))
+            if type(item_value) not in global_types:
+                global_types.append(type(item_value))
+            
             if item_type == int or item_type == float:
                 if item_num != len(data)-1:
                     print_with_tab('"{}" : {},'.format(item_key, item_value), tab_size)
@@ -116,6 +131,7 @@ if __name__ == '__main__':
         exit(-1)
 
     pretty_print_json(json_data)
+    print(global_types)
 
 
     # print('==============')
