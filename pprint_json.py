@@ -6,11 +6,11 @@ from optparse import OptionParser
 def load_data(filepath):
     if not os.path.isfile(filepath):
         return None
-    with open(path, encoding='utf-8') as json_bar_file:
-        line = json_bar_file.read()
+    with open(path, encoding='utf-8') as json_file:
+        line = json_file.read()
 
-    bars = json.loads(line)
-    return bars
+    data = json.loads(line)
+    return data
 
 def print_with_tab(string, tab_size, tab_char='    ', end=True):
     assert type(tab_size) == int and tab_size > 0, 'size should be int and greater that 0'
@@ -21,22 +21,31 @@ def print_with_tab(string, tab_size, tab_char='    ', end=True):
     else:
         print(string, end='')
 
-def pretty_print_json(data, tab_size=1, suspend_first_tab=False):
+def pretty_print_json(data, tab_size=1, suspend_first_tab=False, how_about_coma=False):
     if type(data) == list:
         if suspend_first_tab:
             print('[')
         else:
             print_with_tab('[', tab_size)
             tab_size += 1
-        for item in data:
+        for item_num, item in enumerate(data):
             # print('helllooo\t{}'.format(type(item)))
             if type(item) == int or type(item) == float:
-                print_with_tab('{}'.format(item), tab_size)
+                if item_num != len(data)-1:
+                    print_with_tab('{},'.format(item), tab_size)
+                else:
+                    print_with_tab('{}'.format(item), tab_size)
             elif type(item) == str:
-                print_with_tab('"{}"'.format(item), tab_size)
+                if item_num != len(data)-1:
+                    print_with_tab('"{}",'.format(item), tab_size)
+                else:
+                    print_with_tab('"{}"'.format(item), tab_size)
             else:
                 # print_with_tab('"{}" : '.format(item), tab_size, end=False)
-                pretty_print_json(item, tab_size+1)
+                if item_num != len(data)-1:
+                    pretty_print_json(item, tab_size+1, how_about_coma=True)
+                else:
+                    pretty_print_json(item, tab_size+1)
             # else:
             #     print_with_tab('"{}" : null'.format(item), tab_size)
             # pretty_print_json(item, tab_size+1)
@@ -46,24 +55,42 @@ def pretty_print_json(data, tab_size=1, suspend_first_tab=False):
         else:
             print_with_tab('{', tab_size)
             tab_size += 1
-        for item_key in data:
+        for item_num, item_key in enumerate(data):
             item_value = data[item_key]
             item_type = type(item_value)
             if item_type == int or item_type == float:
-                print_with_tab('"{}" : {}'.format(item_key, item_value), tab_size)
+                if item_num != len(data)-1:
+                    print_with_tab('"{}" : {},'.format(item_key, item_value), tab_size)
+                else:
+                    print_with_tab('"{}" : {}'.format(item_key, item_value), tab_size)
             elif item_type == str:
-                print_with_tab('"{}" : "{}"'.format(item_key, item_value), tab_size)
+                if item_num != len(data)-1:
+                    print_with_tab('"{}" : "{}",'.format(item_key, item_value), tab_size)
+                else:
+                    print_with_tab('"{}" : "{}"'.format(item_key, item_value), tab_size)
             elif item_type == dict or item_type == list:
                 print_with_tab('"{}" : '.format(item_key), tab_size, end=False)
-                pretty_print_json(data[item_key], tab_size+1, suspend_first_tab=True)
+                if item_num != len(data)-1:
+                    pretty_print_json(data[item_key], tab_size+1, suspend_first_tab=True, how_about_coma=True)
+                else:
+                    pretty_print_json(data[item_key], tab_size+1, suspend_first_tab=True)
             else:
-                print_with_tab('"{}" : null'.format(item_key), tab_size)
+                if item_num != len(data)-1:
+                    print_with_tab('"{}" : null,'.format(item_key), tab_size)
+                else:
+                    print_with_tab('"{}" : null'.format(item_key), tab_size)
 
     tab_size -= 1
     if type(data) == list:
-        print_with_tab(']', tab_size)
+        if how_about_coma:
+            print_with_tab('],', tab_size)
+        else:
+            print_with_tab(']', tab_size)
     elif type(data) == dict:
-        print_with_tab('}', tab_size)
+        if how_about_coma:
+            print_with_tab('},', tab_size)
+        else:
+            print_with_tab('}', tab_size)
 
 
 
