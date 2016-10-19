@@ -29,13 +29,14 @@ def pretty_print_json(data, tab_size=1, suspend_first_tab=False):
             print_with_tab('[', tab_size)
             tab_size += 1
         for item in data:
-            if type(item) == int:
+            # print('helllooo\t{}'.format(type(item)))
+            if type(item) == int or type(item) == float:
                 print_with_tab('{}'.format(item), tab_size)
             elif type(item) == str:
                 print_with_tab('"{}"'.format(item), tab_size)
             else:
-                print_with_tab('"{}" : '.format(item), tab_size, end=False)
-                pretty_print_json(item, tab_size+1, suspend_first_tab=True)
+                # print_with_tab('"{}" : '.format(item), tab_size, end=False)
+                pretty_print_json(item, tab_size+1)
             # else:
             #     print_with_tab('"{}" : null'.format(item), tab_size)
             # pretty_print_json(item, tab_size+1)
@@ -48,7 +49,7 @@ def pretty_print_json(data, tab_size=1, suspend_first_tab=False):
         for item_key in data:
             item_value = data[item_key]
             item_type = type(item_value)
-            if item_type == int:
+            if item_type == int or item_type == float:
                 print_with_tab('"{}" : {}'.format(item_key, item_value), tab_size)
             elif item_type == str:
                 print_with_tab('"{}" : "{}"'.format(item_key, item_value), tab_size)
