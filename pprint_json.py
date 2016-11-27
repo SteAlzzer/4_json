@@ -11,9 +11,8 @@ def load_data(filepath):
     if not os.path.isfile(filepath):
         return None 
     with open(filepath, encoding='utf-8') as json_file:
-        line = json_file.read() 
-    data = json.loads(line) 
-    return data
+        data = json.load(json_file) 
+        return data
 
 
 
@@ -24,7 +23,7 @@ def pretty_print_json(data):
 
     Аргументы: data - данные из json файла
     '''
-    pass
+    print(json.dumps(data, indent='  '))
 
 if __name__ == '__main__':
     usage = 'Usage: %prog -p path_to_json'
