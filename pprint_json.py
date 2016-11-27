@@ -23,7 +23,7 @@ def pretty_print_json(data):
 
     Аргументы: data - данные из json файла
     '''
-    print(json.dumps(data, indent='  '))
+    print(json.dumps(data, indent='  ', ensure_ascii=False))
 
 if __name__ == '__main__':
     usage = 'Usage: %prog -p path_to_json'
@@ -31,11 +31,10 @@ if __name__ == '__main__':
 
     parser.add_option('-p', '--path', action='store', type='string', help='Путь до json-файла')
     
-    options,arguments=parser.parse_args()
-    options = options.__dict__
+    options, arguments = parser.parse_args()
 
-    if options['path']:
-        path = options['path']
+    if options.path:
+        path = options.path
     else:
         print('Необходимо указать путь до json-файла')
         exit(-1)
